@@ -6,6 +6,7 @@ from flask_login import login_user, LoginManager, login_required, logout_user
 from data import db_session
 from data.jobs import Jobs
 from data.users import User
+from data.colonists import Colonist
 from forms.user import LoginForm, RegisterForm
 
 app = Flask(__name__)
@@ -26,8 +27,7 @@ def load_user(user_id):
 @app.route('/')
 def users():
     db_sess = db_session.create_session()
-    db_info = db_sess.query(Jobs)
-    return render_template('index.html', jobs=db_info)
+    return render_template('index.html', jobs=db_sess.query(Jobs), colonists=db_sess.query(Colonist))
 
 
 @app.route('/login', methods=['GET', 'POST'])

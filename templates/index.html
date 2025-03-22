@@ -17,10 +17,18 @@
     <tbody>
     <tr>
         <td class="table-primary">{{job.job}}</td>
-        <td class="table-primary">{{job.team_leader}}</td>
+        {% for colonist in colonists %}
+        {% if colonist.id == job.team_leader%}
+        <td class="table-primary">{{colonist.surname}} {{colonist.name}}</td>
+        {% endif%}
+        {% endfor %}
         <td class="table-primary">{{job.work_size}} hours</td>
         <td class="table-primary">{{job.collaborators}}</td>
-        <td class="table-primary">{{job.is_finished}}</td>
+        {% if job.is_finished == False%}
+        <td class="table-primary">Is not finished</td>
+        {% else %}
+        <td class="table-primary">Is finished</td>
+        {% endif %}
     </tr>
     </tbody>
 </table>

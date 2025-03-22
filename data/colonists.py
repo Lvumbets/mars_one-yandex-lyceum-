@@ -26,4 +26,4 @@ class Colonist(SqlAlchemyBase):
     departments = orm.relationship('Department', back_populates='user')
 
     def __repr__(self):
-        return '<Colonist> {id} {surname} {name}'.format(id=self.id, surname=self.surname, name=self.name)
+        return '{surname} {name}'.format(surname=self.surname, name=self.name)

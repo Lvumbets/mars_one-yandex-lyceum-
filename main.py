@@ -1,6 +1,6 @@
 import datetime
 
-from flask import Flask, render_template, redirect, abort, request
+from flask import Flask, render_template, redirect, abort, request, make_response, jsonify
 from flask_login import login_user, LoginManager, login_required, logout_user, current_user
 
 from data import db_session
@@ -148,6 +148,16 @@ def news_delete(id):
     else:
         abort(404)
     return redirect('/')
+
+
+@app.errorhandler(404)
+def not_found(error):
+    return make_response(jsonify({'error': 'Not found'}), 404)
+
+
+@app.errorhandler(400)
+def bad_request(_):
+    return make_response(jsonify({'error': 'Bad Request'}), 400)
 
 
 def main():

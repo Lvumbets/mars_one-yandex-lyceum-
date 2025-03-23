@@ -1,7 +1,7 @@
 import datetime
 
-from flask import Flask, render_template, redirect
-from flask_login import login_user, LoginManager, login_required, logout_user
+from flask import Flask, render_template, redirect, abort, request
+from flask_login import login_user, LoginManager, login_required, logout_user, current_user
 
 from data import db_session
 from data.jobs import Jobs
@@ -79,7 +79,7 @@ def logout():
     return redirect("/")
 
 
-@app.route('/addjob', methods=['GET', 'POST'])
+@app.route('/job', methods=['GET', 'POST'])
 def add_job():
     form = RegisterJob()
     if form.submit.data:
@@ -89,10 +89,43 @@ def add_job():
         jobs.team_leader = form.team_leader.data
         jobs.work_size = form.work_size.data
         jobs.collaborators = form.collaborators.data
+        jobs.creater = current_user
         db_sess.add(jobs)
         db_sess.commit()
         return redirect('/')
-    return render_template('addjob.html', title='Adding a job', form=form)
+    return render_template('job.html', title='Adding a job', form=form)
+
+
+@app.route('/job/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_news(id):
+    form = RegisterJob()
+    if request.method == "GET":  # получить выбранную работу
+        db_sess = db_session.create_session()
+        job = [j for j in db_sess.query(Jobs) if j.id == id and (j.creater == current_user or j.team_leader == 1)]
+        if job:
+            job = job[0]
+            form.title.data = job.job
+            form.team_leader.data = job.team_leader
+            form.work_size.data = job.work_size
+            form.collaborators.data = job.collaborators
+        else:
+            abort(404)
+
+    if form.submit.data:  # при изменении
+        db_sess = db_session.create_session()
+        job = [j for j in db_sess.query(Jobs) if j.id == id and (j.creater == current_user or j.team_leader == 1)]
+        if job:
+            job = job[0]
+            job.job = form.title.data
+            job.team_leader = form.team_leader.data
+            job.work_size = form.work_size.data
+            job.collaborators = form.collaborators.data
+            db_sess.commit()
+            return redirect('/')
+        else:
+            abort(404)
+    return render_template('job.html', title='Редактирование работы', form=form)
 
 
 def main():

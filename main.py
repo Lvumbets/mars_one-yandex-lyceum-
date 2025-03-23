@@ -25,7 +25,8 @@ def load_user(user_id):
 @app.route('/')
 def users():
     db_sess = db_session.create_session()
-    return render_template('index.html', jobs=db_sess.query(Jobs), colonists=db_sess.query(User))
+    lst = [i.id for i in db_sess.query(User).filter(User.position == 'captain')]
+    return render_template('index.html', jobs=db_sess.query(Jobs), colonists=db_sess.query(User), captains=lst)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -89,7 +90,7 @@ def add_job():
         jobs.team_leader = form.team_leader.data
         jobs.work_size = form.work_size.data
         jobs.collaborators = form.collaborators.data
-        jobs.creater = current_user
+        jobs.creater = str(current_user)
         db_sess.add(jobs)
         db_sess.commit()
         return redirect('/')
@@ -102,7 +103,9 @@ def edit_news(id):
     form = RegisterJob()
     if request.method == "GET":  # получить выбранную работу
         db_sess = db_session.create_session()
-        job = [j for j in db_sess.query(Jobs) if j.id == id and (j.creater == current_user or j.team_leader == 1)]
+        lst = [i.id for i in db_sess.query(User).filter(User.position == 'captain')]
+        job = [j for j in db_sess.query(Jobs) if
+               j.id == id and (j.team_leader == current_user.id or current_user.id in lst)]
         if job:
             job = job[0]
             form.title.data = job.job
@@ -114,7 +117,9 @@ def edit_news(id):
 
     if form.submit.data:  # при изменении
         db_sess = db_session.create_session()
-        job = [j for j in db_sess.query(Jobs) if j.id == id and (j.creater == current_user or j.team_leader == 1)]
+        lst = [i.id for i in db_sess.query(User).filter(User.position == 'captain')]
+        job = [j for j in db_sess.query(Jobs) if
+               j.id == id and (j.team_leader == current_user.id or current_user.id in lst)]
         if job:
             job = job[0]
             job.job = form.title.data
@@ -127,11 +132,14 @@ def edit_news(id):
             abort(404)
     return render_template('job.html', title='Редактирование работы', form=form)
 
-@app.route('/news_delete/<int:id>', methods=['GET', 'POST'])
+
+@app.route('/job_delete/<int:id>', methods=['GET', 'POST'])
 @login_required
 def news_delete(id):
     db_sess = db_session.create_session()
-    job = [j for j in db_sess.query(Jobs) if j.id == id and (j.creater == current_user or j.team_leader == 1)]
+    lst = [i.id for i in db_sess.query(User).filter(User.position == 'captain')]
+    job = [j for j in db_sess.query(Jobs) if
+           j.id == id and (j.team_leader == current_user.id or current_user.id in lst)]
     if job:
         job = job[0]
         db_sess.delete(job)
@@ -139,6 +147,7 @@ def news_delete(id):
     else:
         abort(404)
     return redirect('/')
+
 
 def main():
     db_session.global_init('db/mars_explorer.sqlite')

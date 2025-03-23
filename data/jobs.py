@@ -8,7 +8,7 @@ class Jobs(SqlAlchemyBase):
 
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
 
-    team_leader = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey('colonists.id'))
+    team_leader = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey('users.id'))
 
     job = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     work_size = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
@@ -17,7 +17,7 @@ class Jobs(SqlAlchemyBase):
     end_date = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     is_finished = sqlalchemy.Column(sqlalchemy.Boolean, nullable=True, default=False)
 
-    user = orm.relationship("Colonist")
+    user = orm.relationship("User")
 
     def __repr__(self):
         return f'<job> {self.job}'

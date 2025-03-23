@@ -6,17 +6,14 @@ from flask_login import login_user, LoginManager, login_required, logout_user
 from data import db_session
 from data.jobs import Jobs
 from data.users import User
-from data.colonists import Colonist
 from forms.user import LoginForm, RegisterForm
-from forms.jobs import RegisterJob
+from forms.job import RegisterJob
 
 app = Flask(__name__)
 login_manager = LoginManager()
 login_manager.init_app(app)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
-app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(
-    days=365
-)
+app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=365)
 
 
 @login_manager.user_loader
@@ -28,7 +25,7 @@ def load_user(user_id):
 @app.route('/')
 def users():
     db_sess = db_session.create_session()
-    return render_template('index.html', jobs=db_sess.query(Jobs), colonists=db_sess.query(Colonist))
+    return render_template('index.html', jobs=db_sess.query(Jobs), colonists=db_sess.query(User))
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -62,7 +59,11 @@ def reqister():
         user = User(
             name=form.name.data,
             email=form.email.data,
-            about=form.about.data
+            surname=form.surname.data,
+            age=form.age.data,
+            position=form.position.data,
+            speciality=form.speciality.data,
+            address=form.address.data
         )
         user.set_password(form.password.data)
         db_sess.add(user)

@@ -4,10 +4,11 @@ from flask import Flask, render_template, redirect, abort, request
 from flask_login import login_user, LoginManager, login_required, logout_user, current_user
 
 from data import db_session
+from data import jobs_api
 from data.jobs import Jobs
 from data.users import User
-from forms.user import LoginForm, RegisterForm
 from forms.job import RegisterJob
+from forms.user import LoginForm, RegisterForm
 
 app = Flask(__name__)
 login_manager = LoginManager()
@@ -151,6 +152,7 @@ def news_delete(id):
 
 def main():
     db_session.global_init('db/mars_explorer.sqlite')
+    app.register_blueprint(jobs_api.blueprint)
     app.run()
 
 

@@ -8,6 +8,7 @@ from data.jobs import Jobs
 from data.users import User
 from data.colonists import Colonist
 from forms.user import LoginForm, RegisterForm
+from forms.jobs import RegisterJob
 
 app = Flask(__name__)
 login_manager = LoginManager()
@@ -75,6 +76,22 @@ def reqister():
 def logout():
     logout_user()
     return redirect("/")
+
+
+@app.route('/addjob', methods=['GET', 'POST'])
+def add_job():
+    form = RegisterJob()
+    if form.submit.data:
+        db_sess = db_session.create_session()
+        jobs = Jobs()
+        jobs.job = form.title.data
+        jobs.team_leader = form.team_leader.data
+        jobs.work_size = form.work_size.data
+        jobs.collaborators = form.collaborators.data
+        db_sess.add(jobs)
+        db_sess.commit()
+        return redirect('/')
+    return render_template('addjob.html', title='Adding a job', form=form)
 
 
 def main():

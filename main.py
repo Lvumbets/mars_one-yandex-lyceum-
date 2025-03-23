@@ -127,6 +127,18 @@ def edit_news(id):
             abort(404)
     return render_template('job.html', title='Редактирование работы', form=form)
 
+@app.route('/news_delete/<int:id>', methods=['GET', 'POST'])
+@login_required
+def news_delete(id):
+    db_sess = db_session.create_session()
+    job = [j for j in db_sess.query(Jobs) if j.id == id and (j.creater == current_user or j.team_leader == 1)]
+    if job:
+        job = job[0]
+        db_sess.delete(job)
+        db_sess.commit()
+    else:
+        abort(404)
+    return redirect('/')
 
 def main():
     db_session.global_init('db/mars_explorer.sqlite')

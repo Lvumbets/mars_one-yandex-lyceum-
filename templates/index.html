@@ -6,12 +6,12 @@
 <h2>Action # {{job.id}}</h2>
 <table class="table">
     <thead>
-    <tr>
-        <th class="table-secondary">Title of activity</th>
-        <th class="table-secondary">Team leader</th>
-        <th class="table-secondary">Duration</th>
-        <th class="table-secondary">List of collaborators</th>
-        <th class="table-secondary">Is finished</th>
+    <tr class="table-secondary">
+        <th>Title of activity</th>
+        <th>Team leader</th>
+        <th>Duration</th>
+        <th>List of collaborators</th>
+        <th>Is finished</th>
     </tr>
     </thead>
     <tbody>
@@ -25,9 +25,9 @@
         <td class="table-primary">{{job.work_size}} hours</td>
         <td class="table-primary">{{job.collaborators}}</td>
         {% if job.is_finished == False%}
-        <td class="table-primary">Is not finished</td>
+        <td class="table-light">Is not finished</td>
         {% else %}
-        <td class="table-primary">Is finished</td>
+        <td class="table-light">Is finished</td>
         {% endif %}
     </tr>
     </tbody>

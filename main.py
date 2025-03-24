@@ -2,7 +2,8 @@ import datetime
 
 from flask import Flask, render_template, redirect, abort, request, make_response, jsonify
 from flask_login import login_user, LoginManager, login_required, logout_user, current_user
-
+from flask_restful import Api
+from data import users_resource
 from data import db_session
 from data import jobs_api
 from data.jobs import Jobs
@@ -11,6 +12,7 @@ from forms.job import RegisterJob
 from forms.user import LoginForm, RegisterForm
 
 app = Flask(__name__)
+api = Api(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -163,6 +165,8 @@ def bad_request(_):
 def main():
     db_session.global_init('db/mars_explorer.sqlite')
     app.register_blueprint(jobs_api.blueprint)
+    api.add_resource(users_resource.UsersListResource, '/api/v2/users')
+    api.add_resource(users_resource.UsersResource, '/api/v2/news/<int:user_id>')
     app.run()
 
 

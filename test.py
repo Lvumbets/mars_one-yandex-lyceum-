@@ -1,24 +1,11 @@
 from pprint import pprint
 
-from requests import post, get
+from requests import get, delete
 
-# пустой запрос
-print(post('http://localhost:5000/api/jobs', json={}).json())
-
-# неполный запрос
-print(post('http://localhost:5000/api/jobs',
-           json={'title': 'Заголовок'}).json())
-
-# корректный запрос
-print(post('http://localhost:5000/api/jobs',
-           json={'team_leader': 1,
-                 'creater': 'Scott Ridley',
-                 'job': 'black work',
-                 'work_size': 200,
-                 'collaborators': '2,3,4',
-                 'start_date': None,
-                 'end_date': None,
-                 'is_finished': False}).json())
+print(delete('http://localhost:5000/api/jobs/12123').json())
+print(delete('http://localhost:5000/api/jobs/asddsad').json())
+print(delete('http://localhost:5000/api/jobs/').json())
+print(delete('http://localhost:5000/api/jobs/6').json())
 
 # получение всех работ
 pprint(get('http://localhost:5000/api/jobs').json())

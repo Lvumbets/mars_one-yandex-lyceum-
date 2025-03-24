@@ -100,7 +100,7 @@ def add_job():
 
 @app.route('/job/<int:id>', methods=['GET', 'POST'])
 @login_required
-def edit_news(id):
+def edit_job(id):
     form = RegisterJob()
     if request.method == "GET":  # получить выбранную работу
         db_sess = db_session.create_session()
@@ -136,7 +136,7 @@ def edit_news(id):
 
 @app.route('/job_delete/<int:id>', methods=['GET', 'POST'])
 @login_required
-def news_delete(id):
+def job_delete(id):
     db_sess = db_session.create_session()
     lst = [i.id for i in db_sess.query(User).filter(User.position == 'captain')]
     job = [j for j in db_sess.query(Jobs) if

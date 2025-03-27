@@ -54,7 +54,7 @@ class UsersListResource(Resource):
             speciality=args['speciality'],
             address=args['address']
         )
-        user.set_password(args.password.data)
+        user.set_password(args.password)
         db_sess.add(user)
         db_sess.commit()
         return jsonify({'id': user.id})

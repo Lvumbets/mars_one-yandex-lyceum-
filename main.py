@@ -166,7 +166,7 @@ def main():
     db_session.global_init('db/mars_explorer.sqlite')
     app.register_blueprint(jobs_api.blueprint)
     api.add_resource(users_resource.UsersListResource, '/api/v2/users')
-    api.add_resource(users_resource.UsersResource, '/api/v2/news/<int:user_id>')
+    api.add_resource(users_resource.UsersResource, '/api/v2/users/<int:user_id>')
     app.run()
 
 
